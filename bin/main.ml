@@ -117,7 +117,7 @@ let res encode_aux (list: 'a list) (current: 'a list) (cumulator: (int * 'a) lis
 
 let encode (list: 'a list): (int * 'a) list = reverse (encode_aux list [] [] 0) 
 
-
+(*Bing bong*)
 
 let () = 
   let _ = last ["a" ; "b" ; "c"] in 
