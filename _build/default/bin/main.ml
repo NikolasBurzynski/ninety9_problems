@@ -169,16 +169,34 @@ let encode_2 (list: 'a list): 'a rle list = reverse(encode_2_aux list [] 1)
 
 
 (* Q12 *)
-let rec decode_aux_many (char: 'a) (cumulator: 'a list) (count: int): 'a list =
-  if count = 0 then cumulator else decode_aux_many char (char::cumulator) (count-1)
+let rec append_many (char: 'a) (cumulator: 'a list) (count: int): 'a list =
+  if count = 0 then cumulator else append_many char (char::cumulator) (count-1)
 
 let rec decode_aux (list: 'a rle list) (acc: 'a list): 'a list = 
   match list with
   | [] -> acc
-  | Many (n, char) :: rest -> decode_aux rest (decode_aux_many char acc n)
+  | Many (n, char) :: rest -> decode_aux rest (append_many char acc n)
   | One char :: rest -> decode_aux rest (char::acc)
 
-let decode (list: 'a rle list): 'a list = decode_aux list []
+let decode (list: 'a rle list): 'a list = reverse (decode_aux list [])
+
+(* Q13 *)
+let duplicate (list: 'a list): 'a list = 
+  let rec dup_aux (list: 'a list) (acc: 'a list) : 'a list = 
+    match list with
+    | [] -> acc
+    | x::rest -> dup_aux rest (x::x::acc) in
+  reverse (dup_aux list [])
+
+(* Q14 *)
+let rec rep_aux list acc times = 
+  match list with
+  | [] -> acc
+  | x::rest -> rep_aux rest (append_many x acc times) times 
+let replicate (list: 'a list) (times: int): 'a list = 
+  match list with 
+  | [] -> []
+  | _::_ -> reverse @@ rep_aux list [] times
 
 
 let () = 
@@ -193,7 +211,9 @@ let () =
   let _ = pack [1;1;1;1;1;2;3;4;5;6;6;6;7;7] in
   let _ = encode_2 [1;1;1;1;1;2;3;4;5;6;6;6;7;7] in
   let _ = encode [1;1;1;1;1;2;3;4;5;6;6;6;7;7] in
-  let res = decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")] in
+  let _ = decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")] in
+  let _ = duplicate ["a" ; "b" ; "c" ; "d"] in
+  let res = replicate ["a" ; "b" ; "c" ; "d"] 5 in
     printList res
 
 
