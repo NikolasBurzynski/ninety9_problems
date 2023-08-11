@@ -198,6 +198,28 @@ let replicate (list: 'a list) (times: int): 'a list =
   | [] -> []
   | _::_ -> reverse @@ rep_aux list [] times
 
+(* Q15 *)
+(* This version is not tail recursive, it can be made to be though... *)
+let drop (list: 'a list) (num: int): 'a list = 
+  let rec drop_aux list idx = 
+    match list with
+    | [] -> []
+    | x::rest -> if idx = num then drop_aux rest 1 else x::(drop_aux rest (idx+1))
+  in drop_aux list 1
+
+(* Q16 *)
+let split (list: 'a list) (indx: int) : 'a list * 'a list = 
+  let rec aux list acc i = 
+    match list with
+    | [] -> (reverse acc, [])
+    | x::rest -> if i = 0 then (reverse (acc), rest) else aux rest (x::acc) (i-1)
+  in 
+  aux list [] indx
+
+(* Q17 *)
+
+
+
 
 let () = 
   let _ = last ["a" ; "b" ; "c"] in 
@@ -213,7 +235,13 @@ let () =
   let _ = encode [1;1;1;1;1;2;3;4;5;6;6;6;7;7] in
   let _ = decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")] in
   let _ = duplicate ["a" ; "b" ; "c" ; "d"] in
-  let res = replicate ["a" ; "b" ; "c" ; "d"] 5 in
-    printList res
+  let _ = replicate ["a" ; "b" ; "c" ; "d"] 5 in
+  let _ = drop ["a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d"] 6 in
+  let spitted = split ["a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d"] 1 in
+    match spitted with
+    | a,b -> 
+      printList a;
+      print_string "\n";
+      printList b
 
 
