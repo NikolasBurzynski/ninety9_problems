@@ -1,4 +1,4 @@
-let rec _printList (list: string list) = 
+let rec printList (list: string list) = 
   match list with
   | [x] -> 
     print_string x;
@@ -6,7 +6,7 @@ let rec _printList (list: string list) =
   | x::rest ->
     print_string x;
     print_string ":";
-    _printList rest
+    printList rest
   | [] -> ()
 
 let rec _printMap (list: (int * int) list) =
@@ -40,7 +40,7 @@ let rec _printMap (list: (int * int) list) =
     | [] -> ()
     
 
-  let rec printList (list: int list) = 
+  let rec _printList (list: int list) = 
     match list with
     | [x] -> 
       print_int x;
@@ -48,7 +48,7 @@ let rec _printMap (list: (int * int) list) =
     | x::rest ->
       print_int x;
       print_string " ";
-      printList rest
+      _printList rest
     | [] -> ()
 
   let rec _printListList (list: 'a list list) = 
@@ -212,36 +212,19 @@ let split (list: 'a list) (indx: int) : 'a list * 'a list =
   let rec aux list acc i = 
     match list with
     | [] -> (reverse acc, [])
-    | x::rest -> if i = 0 then (reverse (acc), x::rest) else aux rest (x::acc) (i-1)
+    | x::rest -> if i = 0 then (reverse (acc), rest) else aux rest (x::acc) (i-1)
   in 
   aux list [] indx
 
 (* Q17 *)
-let slice (list: 'a list) (start_i: int) (end_i: int) : 'a list =
+let splice (list: 'a list) (start_i: int) (end_i: int) : 'a list =
   let rec aux (list: 'a list) (indx: int) (acc: 'a list) =
     match list with
     | [] -> acc
     | x::rest -> if indx <= end_i && indx >= start_i then 
                   aux rest (indx+1) (x::acc)
                  else if indx > end_i then acc else aux rest (indx+1) acc
-    in reverse (aux list 0 [])
-
-(* Q18 *)
-let rotate (list: 'a list) (places: int): 'a list = 
-  let shifts = if length list = 0 then 0 else places mod (length list) in
-    if shifts = 0 then list else
-      let left, right = split list shifts  in
-        right @ left
-
-(* Q19 *)
-let remove_at (indx: int) (list: 'a list): 'a list = 
-  let rec aux (list: 'a list) (num: int): 'a list =
-    match list with
-    | [] -> []
-    | x::rest -> if num = indx then aux rest (num+1) else x::aux rest (num+1)in 
-  aux list 0 
-
-         
+    in aux list 0 []
 
 
 
@@ -262,9 +245,11 @@ let () =
   let _ = duplicate ["a" ; "b" ; "c" ; "d"] in
   let _ = replicate ["a" ; "b" ; "c" ; "d"] 5 in
   let _ = drop ["a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d"] 6 in
-  let _ = split ["a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d"] 1 in
-  let _ = slice [1;1;1;1;1;2;3;4;5;6;6;6;7;7] 3 7 in 
-  let _ = rotate [1;1;1;1;1;2;3;4;5;6;6;6;7;7] 22 in 
-  let res = remove_at 6 [1;1;1;1;1;2;3;4;5;6;6;6;7;7] in 
-      printList res
+  let spitted = split ["a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d" ; "a" ; "b" ; "c" ; "d"] 1 in
+    match spitted with
+    | a,b -> 
+      printList a;
+      print_string "\n";
+      printList b
+
 
