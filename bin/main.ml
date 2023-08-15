@@ -241,6 +241,11 @@ let remove_at (indx: int) (list: 'a list): 'a list =
     | x::rest -> if num = indx then aux rest (num+1) else x::aux rest (num+1)in 
   aux list 0 
 
+(* Q20 *)
+let insert_at (ele: 'a) (indx: int) (list: 'a list): 'a list = 
+  
+
+
 let () = 
   let _ = last ["a" ; "b" ; "c"] in 
   let _ = last_two ["a" ; "b" ; "c"] in 
